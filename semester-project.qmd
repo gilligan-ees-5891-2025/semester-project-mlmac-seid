@@ -1,7 +1,7 @@
 ---
-title: "Put the title of your project here"
+title: "Statistical Analysis of Active Layer Thickness in Utqiagvik, Alaska"
 subtitle: "EES 4891/5891: Probability and Statistics for Geosciences"
-author: "Put your name here"
+author: "Maya Maciel-Seidman"
 date: last-modified
 ---
 
@@ -17,6 +17,8 @@ Set up R environment by loading the necessary libraries
 library(knitr)
 library(scales)
 library(tidyverse)
+library(ggplot2)
+library(MASS, quietly = TRUE)
 
 # maybe include other libraries:
 # library(tidymodels)
@@ -29,17 +31,227 @@ theme_set(theme_bw())
 
 Write the introduction: describe what data you're going to study, why you're interested in it, where you obtained the data, and any other relevant background.
 
-### Date set
+### Data set
 
 Describe your data set: what data are you looking at? Where did you get it from (cite publications if relevant), etc. Describe what the data is: what variables are measured, how many observations (rows in a data table) does it contain, etc.
 
-You may want to incude code to read the data in.
+```{r}
+alt_df <- read.csv("Copy of Utqiagvik Summary Dataset.csv")
+alt_df <- alt_df %>% dplyr::select(!annual_mean_snow_depth_in)
+alt_df <- alt_df %>% dplyr::select(!annual_total_precip_in)
+alt_df <- alt_df %>% dplyr::select(!annual_total_snowfall_in)
+alt_df <- alt_df %>% dplyr::select(!site_code)
+alt_df <- alt_df %>% dplyr::select(!site_name)
+```
+
+
 
 ## Descriptive Statistics
 
 Put code and text to calculate and present descriptive statistics for your data. This should include histograms and kernel-density plots of the distribution of each variable you will be studying. If you have multivariate data, a pairs plot is helpful for showing the correlations and covariance between different variables.
 
 Describe the probability distribution of the data: is it normal or some other distribution? Histograms and Q-Q plots can be helpful here.
+
+```{r}
+# Yearly thawing degree days:
+TDD_summary <- summary(alt_df$yearly_TDD)
+TDD_summary["St. Dev"] <- sd(alt_df$yearly_TDD)
+TDD_summary
+
+ggplot(data= alt_df, aes(x = yearly_TDD)) +
+  geom_density() +
+  labs(x = "Yearly Thawing Degree Days", y = "Density", title = "Kernel Density of yearly_TDD")
+
+ggplot(data = alt_df, aes(x = yearly_TDD)) +
+  geom_histogram(colour = "black", fill = "darkgreen", bins = 20, binwidth = 30) +
+  labs(x = "Yearly Thawing Degree Days", y = "Count", title = "Histogram of yearly_TDD")
+
+ggplot(data = alt_df, aes(sample = yearly_TDD)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Normal Distribution Q-Q Plot for Yearly Thawing Degree Days")
+
+TDD_gamma <- fitdistr(alt_df$yearly_TDD, densfun = "gamma")
+ggplot(data = alt_df, aes(sample = yearly_TDD)) +
+  geom_qq_line(distribution = qgamma, dparams = TDD_gamma$estimate) + 
+  geom_qq(distribution = qgamma, dparams = TDD_gamma$estimate) +
+  labs(title = "Gamma Distribution Q-Q Plot for Yearly Thawing Degree Days")
+
+TDD_weibull <- fitdistr(alt_df$yearly_TDD, densfun = "weibull")
+ggplot(data = alt_df, aes(sample = yearly_TDD)) +
+  geom_qq_line(distribution = qweibull, dparams = TDD_weibull$estimate) + 
+  geom_qq(distribution = qweibull, dparams = TDD_weibull$estimate) +
+  labs(title = "Weibull Distribution Q-Q Plot for Yearly Thawing Degree Days")
+
+TDD_poisson <- fitdistr(alt_df$yearly_TDD, densfun = "poisson")
+ggplot(data = alt_df, aes(sample = yearly_TDD)) +
+  geom_qq_line(distribution = qpois, dparams = TDD_poisson$estimate) + 
+  geom_qq(distribution = qpois, dparams = TDD_poisson$estimate) +
+  labs(title = "Poisson Distribution Q-Q Plot for Yearly Thawing Degree Days")
+```
+
+Based on the Q-Q plots, yearly thawing degree days does not seem to closely follow a normal, gamma, Weibull, or Poisson distribution. However, it follows a Weibull or Poisson distribution more closely than a normal or gamma distribution.
+
+```{r}
+# Yearly freezing degree days:
+FDD_summary <- summary(alt_df$yearly_FDD)
+FDD_summary["St. Dev"] <- sd(alt_df$yearly_FDD)
+FDD_summary
+
+ggplot(data= alt_df, aes(x = yearly_FDD)) +
+  geom_density() +
+  labs(x = "Yearly Freezing Degree Days", y = "Density", title = "Kernel Density of yearly_FDD")
+
+ggplot(data = alt_df, aes(x = yearly_FDD)) +
+  geom_histogram(colour = "black", fill = "darkgreen", bins = 20, binwidth = 30) +
+  labs(x = "Yearly Freezinf Degree Days", y = "Count", title = "Histogram of yearly_FDD")
+
+ggplot(data = alt_df, aes(sample = yearly_FDD)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Normal Distribution Q-Q Plot for Yearly Freezing Degree Days")
+```
+
+Based on the Q-Q plot, it seems that yearly freezing degree days does not follow a normal distribution. The other distributions could not be fit to this variable since all of the observations are negative numbers and the other distributions require non-negative numbers as inputs.
+
+```{r}
+# Annual mean air temperature:
+air_temp_summary <- summary(alt_df$annual_mean_air_temp)
+air_temp_summary["St. Dev"] <- sd(alt_df$annual_mean_air_temp)
+air_temp_summary
+
+ggplot(data= alt_df, aes(x = annual_mean_air_temp)) +
+  geom_density() +
+  labs(x = "Annual Mean Air Temperature", y = "Density", title = "Kernel Density of annual_mean_air_temp")
+
+ggplot(data = alt_df, aes(x = annual_mean_air_temp)) +
+  geom_histogram(colour = "black", fill = "darkgreen", bins = 30, binwidth = 1) +
+  labs(x = "Annual Mean Air Temperature", y = "Count", title = "Histogram of annual_mean_air_temp")
+
+ggplot(data = alt_df, aes(sample = annual_mean_air_temp)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Normal Distribution Q-Q Plot for Annual Mean Air Temperature")
+```
+
+Looking at the Q-Q plot, annual mean air temperature does not particularly follow a normal distribution. The other distributions could not be fit to this variable since all of the observations are negative numbers and the other distributions require non-negative numbers as inputs.
+
+```{r}
+# Active layer thickness:
+ALT_summary <- summary(alt_df$mean_ALT)
+ALT_summary["St. Dev"] <- sd(alt_df$mean_ALT)
+ALT_summary
+
+ggplot(data= alt_df, aes(x = mean_ALT)) +
+  geom_density() +
+  labs(x = "Active Layer Thickness", y = "Density", title = "Kernel Density of mean_ALT")
+
+ggplot(data = alt_df, aes(x = mean_ALT)) +
+  geom_histogram(colour = "black", fill = "darkgreen", bins = 20, binwidth = 1.75) +
+  labs(x = "Active Layer Thickness", y = "Count", title = "Histogram of mean_ALT")
+
+ggplot(data = alt_df, aes(sample = mean_ALT)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Normal Distribution Q-Q Plot for Active Layer Thickness")
+
+ALT_gamma <- fitdistr(alt_df$mean_ALT, densfun = "gamma")
+ggplot(data = alt_df, aes(sample = mean_ALT)) +
+  geom_qq_line(distribution = qgamma, dparams = ALT_gamma$estimate) + 
+  geom_qq(distribution = qgamma, dparams = ALT_gamma$estimate) +
+  labs(title = "Gamma Distribution Q-Q Plot for Active Layer Thickness")
+
+ALT_weibull <- fitdistr(alt_df$mean_ALT, densfun = "weibull")
+ggplot(data = alt_df, aes(sample = mean_ALT)) +
+  geom_qq_line(distribution = qweibull, dparams = ALT_weibull$estimate) + 
+  geom_qq(distribution = qweibull, dparams = ALT_weibull$estimate) +
+  labs(title = "Weibull Distribution Q-Q Plot for Active Layer Thickness")
+
+ALT_poisson <- fitdistr(alt_df$mean_ALT, densfun = "poisson")
+ggplot(data = alt_df, aes(sample = mean_ALT)) +
+  geom_qq_line(distribution = qpois, dparams = ALT_poisson$estimate) + 
+  geom_qq(distribution = qpois, dparams = ALT_poisson$estimate) +
+  labs(title = "Poisson Distribution Q-Q Plot for Active Layer Thickness")
+```
+
+Based on the Q-Q plots, it appears that active layer thickness most closely follows a gamma distribution.
+
+```{r}
+# Snow depth:
+snow_depth_summary <- summary(alt_df$annual_mean_snow_depth_cm)
+snow_depth_summary["St. Dev"] <- sd(alt_df$annual_mean_snow_depth_cm)
+snow_depth_summary
+
+ggplot(data= alt_df, aes(x = annual_mean_snow_depth_cm)) +
+  geom_density() +
+  labs(x = "Snow Depth", y = "Density", title = "Kernel Density of annual_mean_snow_depth_cm")
+
+ggplot(data = alt_df, aes(x = yearly_TDD)) +
+  geom_histogram(colour = "black", fill = "darkgreen", bins = 20, binwidth = 30) +
+  labs(x = "Yearly Thawing Degree Days", y = "Count", title = "Histogram of yearly_TDD")
+
+ggplot(data = alt_df, aes(sample = annual_mean_snow_depth_cm)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Normal Distribution Q-Q Plot for Snow Depth")
+```
+
+Annual mean snow depth does not closely follow a normal distribution, based on the Q-Q plot. I couldn't fit the other distributions to the data since there exists missing data. I chose not to omit the missing data since my data set does not have many observations and I did not want to decrease the number of observations and make the data set even smaller.
+
+```{r}
+# Precipitation:
+precip_summary <- summary(alt_df$annual_total_precip_cm)
+precip_summary["St. Dev"] <- sd(alt_df$annual_total_precip_cm)
+precip_summary
+
+ggplot(data= alt_df, aes(x = annual_total_precip_cm)) +
+  geom_density() +
+  labs(x = "Annual Total Precipitation", y = "Density", title = "Kernel Density of annual_total_precip_cm")
+
+ggplot(data = alt_df, aes(x = annual_total_precip_cm)) +
+  geom_histogram(colour = "black", fill = "darkgreen", bins = 20, binwidth = 2) +
+  labs(x = "Annual Total Precipitation", y = "Count", title = "Histogram of annual_total_precip_cm")
+
+ggplot(data = alt_df, aes(sample = annual_total_precip_cm)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Normal Distribution Q-Q Plot for Annual Total Precipitation")
+
+precip_gamma <- fitdistr(alt_df$annual_total_precip_cm, densfun = "gamma")
+ggplot(data = alt_df, aes(sample = annual_total_precip_cm)) +
+  geom_qq_line(distribution = qgamma, dparams = precip_gamma$estimate) + 
+  geom_qq(distribution = qgamma, dparams = precip_gamma$estimate) +
+  labs(title = "Gamma Distribution Q-Q Plot for Annual Total Precipitation")
+
+precip_weibull <- fitdistr(alt_df$annual_total_precip_cm, densfun = "weibull")
+ggplot(data = alt_df, aes(sample = annual_total_precip_cm)) +
+  geom_qq_line(distribution = qweibull, dparams = precip_weibull$estimate) + 
+  geom_qq(distribution = qweibull, dparams = precip_weibull$estimate) +
+  labs(title = "Weibull Distribution Q-Q Plot for Annual Total Precipitation")
+
+precip_poisson <- fitdistr(alt_df$annual_total_precip_cm, densfun = "poisson")
+ggplot(data = alt_df, aes(sample = annual_total_precip_cm)) +
+  geom_qq_line(distribution = qpois, dparams = precip_poisson$estimate) + 
+  geom_qq(distribution = qpois, dparams = precip_poisson$estimate) +
+  labs(title = "Poisson Distribution Q-Q Plot for Annual Total Precipitation")
+```
+
+Based on the Q-Q plots, a gamma distribution seems to be the best fit for annual total precipitation.
+
+```{r}
+# Snowfall:
+snowfall_summary <- summary(alt_df$annual_total_snowfall_cm)
+snowfall_summary["St. Dev"] <- sd(alt_df$annual_total_snowfall_cm)
+snowfall_summary
+
+ggplot(data= alt_df, aes(x = annual_total_snowfall_cm)) +
+  geom_density() +
+  labs(x = "Annual Total Snowfall", y = "Density", title = "Kernel Density of annual_total_snowfall_cm")
+
+ggplot(data = alt_df, aes(x = annual_total_snowfall_cm)) +
+  geom_histogram(colour = "black", fill = "darkgreen", bins = 20, binwidth = 20) +
+  labs(x = "Annual Total Snowfall", y = "Count", title = "Histogram of annual_total_snowfall_cm")
+
+ggplot(data = alt_df, aes(sample = annual_total_snowfall_cm)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Normal Distribution Q-Q Plot for Annual Total Snowfall")
+```
+
+The Q-Q plot conveys that annual total snowfall does not closely follow a normal distribution. I again chose not to remove missing data, so I did not fit the other distributions.
 
 ## Research Questions
 

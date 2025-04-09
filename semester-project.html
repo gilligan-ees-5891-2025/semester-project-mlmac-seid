@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Put your name here">
-<meta name="dcterms.date" content="2025-04-08">
+<meta name="author" content="Maya Maciel-Seidman">
+<meta name="dcterms.date" content="2025-04-09">
 
-<title>Put the title of your project here</title>
+<title>Statistical Analysis of Active Layer Thickness in Utqiagvik, Alaska</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -35,7 +35,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Put the title of your project here</h1>
+<h1 class="title">Statistical Analysis of Active Layer Thickness in Utqiagvik, Alaska</h1>
 <p class="subtitle lead">EES 4891/5891: Probability and Statistics for Geosciences</p>
 </div>
 
@@ -92,14 +92,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Put your name here </p>
+             <p>Maya Maciel-Seidman </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 8, 2025</p>
+      <p class="date">April 9, 2025</p>
     </div>
   </div>
   
@@ -118,27 +118,711 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># maybe include other libraries:</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># library(tidymodels)</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># set up default plotting format for ggplot2 graphs</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># maybe include other libraries:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># library(tidymodels)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># set up default plotting format for ggplot2 graphs</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>Write the introduction: describe what data you’re going to study, why you’re interested in it, where you obtained the data, and any other relevant background.</p>
-<section id="date-set" class="level3">
-<h3 class="anchored" data-anchor-id="date-set">Date set</h3>
+<section id="data-set" class="level3">
+<h3 class="anchored" data-anchor-id="data-set">Data set</h3>
 <p>Describe your data set: what data are you looking at? Where did you get it from (cite publications if relevant), etc. Describe what the data is: what variables are measured, how many observations (rows in a data table) does it contain, etc.</p>
-<p>You may want to incude code to read the data in.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Copy of Utqiagvik Summary Dataset.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">!</span>annual_mean_snow_depth_in)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">!</span>annual_total_precip_in)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">!</span>annual_total_snowfall_in)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">!</span>site_code)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">!</span>site_name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 <section id="descriptive-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="descriptive-statistics">Descriptive Statistics</h2>
 <p>Put code and text to calculate and present descriptive statistics for your data. This should include histograms and kernel-density plots of the distribution of each variable you will be studying. If you have multivariate data, a pairs plot is helpful for showing the correlations and covariance between different variables.</p>
 <p>Describe the probability distribution of the data: is it normal or some other distribution? Histograms and Q-Q plots can be helpful here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Yearly thawing degree days:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>TDD_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(alt_df<span class="sc">$</span>yearly_TDD)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>TDD_summary[<span class="st">"St. Dev"</span>] <span class="ot">&lt;-</span> <span class="fu">sd</span>(alt_df<span class="sc">$</span>yearly_TDD)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>TDD_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. St. Dev 
+  274.7   379.4   437.2   456.3   510.0   717.8   112.4 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> yearly_TDD)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Yearly Thawing Degree Days"</span>, <span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">title =</span> <span class="st">"Kernel Density of yearly_TDD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> yearly_TDD)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"darkgreen"</span>, <span class="at">bins =</span> <span class="dv">20</span>, <span class="at">binwidth =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Yearly Thawing Degree Days"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">title =</span> <span class="st">"Histogram of yearly_TDD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> yearly_TDD)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Distribution Q-Q Plot for Yearly Thawing Degree Days"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>TDD_gamma <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(alt_df<span class="sc">$</span>yearly_TDD, <span class="at">densfun =</span> <span class="st">"gamma"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> yearly_TDD)) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">distribution =</span> qgamma, <span class="at">dparams =</span> TDD_gamma<span class="sc">$</span>estimate) <span class="sc">+</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="at">distribution =</span> qgamma, <span class="at">dparams =</span> TDD_gamma<span class="sc">$</span>estimate) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gamma Distribution Q-Q Plot for Yearly Thawing Degree Days"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>TDD_weibull <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(alt_df<span class="sc">$</span>yearly_TDD, <span class="at">densfun =</span> <span class="st">"weibull"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> yearly_TDD)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">distribution =</span> qweibull, <span class="at">dparams =</span> TDD_weibull<span class="sc">$</span>estimate) <span class="sc">+</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="at">distribution =</span> qweibull, <span class="at">dparams =</span> TDD_weibull<span class="sc">$</span>estimate) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Weibull Distribution Q-Q Plot for Yearly Thawing Degree Days"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-2-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>TDD_poisson <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(alt_df<span class="sc">$</span>yearly_TDD, <span class="at">densfun =</span> <span class="st">"poisson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 381.110000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 379.440000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 437.220000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 607.500000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 468.060000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 274.720000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 331.940000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 293.890000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 542.780000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 386.670000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 390.560000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 594.440000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 365.280000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 497.500000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 500.830000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 501.940000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 578.330000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 508.890000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 276.940000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 435.830000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 513.060000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 378.060000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 717.780000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 427.500000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 421.940000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 466.110000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> yearly_TDD)) <span class="sc">+</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">distribution =</span> qpois, <span class="at">dparams =</span> TDD_poisson<span class="sc">$</span>estimate) <span class="sc">+</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="at">distribution =</span> qpois, <span class="at">dparams =</span> TDD_poisson<span class="sc">$</span>estimate) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Poisson Distribution Q-Q Plot for Yearly Thawing Degree Days"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-2-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based on the Q-Q plots, yearly thawing degree days does not seem to closely follow a normal, gamma, Weibull, or Poisson distribution. However, it follows a Weibull or Poisson distribution more closely than a normal or gamma distribution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Yearly freezing degree days:</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>FDD_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(alt_df<span class="sc">$</span>yearly_FDD)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>FDD_summary[<span class="st">"St. Dev"</span>] <span class="ot">&lt;-</span> <span class="fu">sd</span>(alt_df<span class="sc">$</span>yearly_FDD)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>FDD_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. St. Dev 
+-4822.2 -4305.6 -4071.1 -4018.7 -3720.3 -2962.8   446.9 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> yearly_FDD)) <span class="sc">+</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Yearly Freezing Degree Days"</span>, <span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">title =</span> <span class="st">"Kernel Density of yearly_FDD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> yearly_FDD)) <span class="sc">+</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"darkgreen"</span>, <span class="at">bins =</span> <span class="dv">20</span>, <span class="at">binwidth =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Yearly Freezinf Degree Days"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">title =</span> <span class="st">"Histogram of yearly_FDD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> yearly_FDD)) <span class="sc">+</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Distribution Q-Q Plot for Yearly Freezing Degree Days"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based on the Q-Q plot, it seems that yearly freezing degree days does not follow a normal distribution. The other distributions could not be fit to this variable since all of the observations are negative numbers and the other distributions require non-negative numbers as inputs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annual mean air temperature:</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>air_temp_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(alt_df<span class="sc">$</span>annual_mean_air_temp)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>air_temp_summary[<span class="st">"St. Dev"</span>] <span class="ot">&lt;-</span> <span class="fu">sd</span>(alt_df<span class="sc">$</span>annual_mean_air_temp)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>air_temp_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. St. Dev 
+-11.930 -10.530  -9.940  -9.754  -9.230  -6.150   1.383 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> annual_mean_air_temp)) <span class="sc">+</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Annual Mean Air Temperature"</span>, <span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">title =</span> <span class="st">"Kernel Density of annual_mean_air_temp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> annual_mean_air_temp)) <span class="sc">+</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"darkgreen"</span>, <span class="at">bins =</span> <span class="dv">30</span>, <span class="at">binwidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Annual Mean Air Temperature"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">title =</span> <span class="st">"Histogram of annual_mean_air_temp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> annual_mean_air_temp)) <span class="sc">+</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Distribution Q-Q Plot for Annual Mean Air Temperature"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Looking at the Q-Q plot, annual mean air temperature does not particularly follow a normal distribution. The other distributions could not be fit to this variable since all of the observations are negative numbers and the other distributions require non-negative numbers as inputs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Active layer thickness:</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>ALT_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(alt_df<span class="sc">$</span>mean_ALT)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>ALT_summary[<span class="st">"St. Dev"</span>] <span class="ot">&lt;-</span> <span class="fu">sd</span>(alt_df<span class="sc">$</span>mean_ALT)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>ALT_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. St. Dev 
+ 28.610  33.270  36.820  36.898  40.510  47.320   4.798 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT)) <span class="sc">+</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">title =</span> <span class="st">"Kernel Density of mean_ALT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT)) <span class="sc">+</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"darkgreen"</span>, <span class="at">bins =</span> <span class="dv">20</span>, <span class="at">binwidth =</span> <span class="fl">1.75</span>) <span class="sc">+</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">title =</span> <span class="st">"Histogram of mean_ALT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> mean_ALT)) <span class="sc">+</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Distribution Q-Q Plot for Active Layer Thickness"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>ALT_gamma <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(alt_df<span class="sc">$</span>mean_ALT, <span class="at">densfun =</span> <span class="st">"gamma"</span>)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> mean_ALT)) <span class="sc">+</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">distribution =</span> qgamma, <span class="at">dparams =</span> ALT_gamma<span class="sc">$</span>estimate) <span class="sc">+</span> </span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="at">distribution =</span> qgamma, <span class="at">dparams =</span> ALT_gamma<span class="sc">$</span>estimate) <span class="sc">+</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gamma Distribution Q-Q Plot for Active Layer Thickness"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-5-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>ALT_weibull <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(alt_df<span class="sc">$</span>mean_ALT, <span class="at">densfun =</span> <span class="st">"weibull"</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> mean_ALT)) <span class="sc">+</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">distribution =</span> qweibull, <span class="at">dparams =</span> ALT_weibull<span class="sc">$</span>estimate) <span class="sc">+</span> </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="at">distribution =</span> qweibull, <span class="at">dparams =</span> ALT_weibull<span class="sc">$</span>estimate) <span class="sc">+</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Weibull Distribution Q-Q Plot for Active Layer Thickness"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-5-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>ALT_poisson <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(alt_df<span class="sc">$</span>mean_ALT, <span class="at">densfun =</span> <span class="st">"poisson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 34.460000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 35.600000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 36.820000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 41.020000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 37.040000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 33.990000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 30.370000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 30.640000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 28.610000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 42.450000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 33.270000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 32.390000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 31.870000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 34.270000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 34.330000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 41.190000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 41.430000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 37.710000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 40.510000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 35.630000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 39.790000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 40.110000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 38.870000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 38.250000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 47.320000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 45.250000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 31.140000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 32.110000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 43.590000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> mean_ALT)) <span class="sc">+</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">distribution =</span> qpois, <span class="at">dparams =</span> ALT_poisson<span class="sc">$</span>estimate) <span class="sc">+</span> </span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="at">distribution =</span> qpois, <span class="at">dparams =</span> ALT_poisson<span class="sc">$</span>estimate) <span class="sc">+</span></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Poisson Distribution Q-Q Plot for Active Layer Thickness"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-5-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based on the Q-Q plots, it appears that active layer thickness most closely follows a gamma distribution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Snow depth:</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>snow_depth_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(alt_df<span class="sc">$</span>annual_mean_snow_depth_cm)</span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>snow_depth_summary[<span class="st">"St. Dev"</span>] <span class="ot">&lt;-</span> <span class="fu">sd</span>(alt_df<span class="sc">$</span>annual_mean_snow_depth_cm)</span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>snow_depth_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. St. Dev    NA's 
+   0.00   11.24   13.59   13.46   15.49   22.35      NA       3 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> annual_mean_snow_depth_cm)) <span class="sc">+</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Snow Depth"</span>, <span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">title =</span> <span class="st">"Kernel Density of annual_mean_snow_depth_cm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_density()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> yearly_TDD)) <span class="sc">+</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"darkgreen"</span>, <span class="at">bins =</span> <span class="dv">20</span>, <span class="at">binwidth =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Yearly Thawing Degree Days"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">title =</span> <span class="st">"Histogram of yearly_TDD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> annual_mean_snow_depth_cm)) <span class="sc">+</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Distribution Q-Q Plot for Snow Depth"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_qq_line()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_qq()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Annual mean snow depth does not closely follow a normal distribution, based on the Q-Q plot. I couldn’t fit the other distributions to the data since there exists missing data. I chose not to omit the missing data since my data set does not have many observations and I did not want to decrease the number of observations and make the data set even smaller.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Precipitation:</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>precip_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(alt_df<span class="sc">$</span>annual_total_precip_cm)</span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>precip_summary[<span class="st">"St. Dev"</span>] <span class="ot">&lt;-</span> <span class="fu">sd</span>(alt_df<span class="sc">$</span>annual_total_precip_cm)</span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>precip_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. St. Dev 
+  5.969  12.065  14.732  14.763  16.739  25.679   4.499 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> annual_total_precip_cm)) <span class="sc">+</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Annual Total Precipitation"</span>, <span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">title =</span> <span class="st">"Kernel Density of annual_total_precip_cm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> annual_total_precip_cm)) <span class="sc">+</span></span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"darkgreen"</span>, <span class="at">bins =</span> <span class="dv">20</span>, <span class="at">binwidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Annual Total Precipitation"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">title =</span> <span class="st">"Histogram of annual_total_precip_cm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> annual_total_precip_cm)) <span class="sc">+</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Distribution Q-Q Plot for Annual Total Precipitation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>precip_gamma <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(alt_df<span class="sc">$</span>annual_total_precip_cm, <span class="at">densfun =</span> <span class="st">"gamma"</span>)</span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> annual_total_precip_cm)) <span class="sc">+</span></span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">distribution =</span> qgamma, <span class="at">dparams =</span> precip_gamma<span class="sc">$</span>estimate) <span class="sc">+</span> </span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="at">distribution =</span> qgamma, <span class="at">dparams =</span> precip_gamma<span class="sc">$</span>estimate) <span class="sc">+</span></span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gamma Distribution Q-Q Plot for Annual Total Precipitation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-7-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>precip_weibull <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(alt_df<span class="sc">$</span>annual_total_precip_cm, <span class="at">densfun =</span> <span class="st">"weibull"</span>)</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> annual_total_precip_cm)) <span class="sc">+</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">distribution =</span> qweibull, <span class="at">dparams =</span> precip_weibull<span class="sc">$</span>estimate) <span class="sc">+</span> </span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="at">distribution =</span> qweibull, <span class="at">dparams =</span> precip_weibull<span class="sc">$</span>estimate) <span class="sc">+</span></span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Weibull Distribution Q-Q Plot for Annual Total Precipitation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-7-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>precip_poisson <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(alt_df<span class="sc">$</span>annual_total_precip_cm, <span class="at">densfun =</span> <span class="st">"poisson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 6.985000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 8.839200</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 13.055600</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 11.938000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 9.347200</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 14.782800</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 11.760200</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 12.065000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 14.732000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 15.265400</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 12.344400</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 10.591800</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 5.969000</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 12.242800</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 15.671800</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 13.893800</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 16.738600</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 15.925800</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 21.361400</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 18.821400</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 14.554200</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 13.817600</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 21.412200</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 16.662400</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 25.679400</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 15.646400</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 19.634200</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 17.068800</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(x, estimate, log = TRUE): non-integer x = 21.310600</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> annual_total_precip_cm)) <span class="sc">+</span></span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">distribution =</span> qpois, <span class="at">dparams =</span> precip_poisson<span class="sc">$</span>estimate) <span class="sc">+</span> </span>
+<span id="cb131-3"><a href="#cb131-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="at">distribution =</span> qpois, <span class="at">dparams =</span> precip_poisson<span class="sc">$</span>estimate) <span class="sc">+</span></span>
+<span id="cb131-4"><a href="#cb131-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Poisson Distribution Q-Q Plot for Annual Total Precipitation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-7-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based on the Q-Q plots, a gamma distribution seems to be the best fit for annual total precipitation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Snowfall:</span></span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a>snowfall_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(alt_df<span class="sc">$</span>annual_total_snowfall_cm)</span>
+<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a>snowfall_summary[<span class="st">"St. Dev"</span>] <span class="ot">&lt;-</span> <span class="fu">sd</span>(alt_df<span class="sc">$</span>annual_total_snowfall_cm)</span>
+<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a>snowfall_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. St. Dev    NA's 
+    0.0    94.3   113.7   114.8   146.7   195.8      NA       3 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> annual_total_snowfall_cm)) <span class="sc">+</span></span>
+<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb134-3"><a href="#cb134-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Annual Total Snowfall"</span>, <span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">title =</span> <span class="st">"Kernel Density of annual_total_snowfall_cm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_density()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">x =</span> annual_total_snowfall_cm)) <span class="sc">+</span></span>
+<span id="cb136-2"><a href="#cb136-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"darkgreen"</span>, <span class="at">bins =</span> <span class="dv">20</span>, <span class="at">binwidth =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb136-3"><a href="#cb136-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Annual Total Snowfall"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">title =</span> <span class="st">"Histogram of annual_total_snowfall_cm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alt_df, <span class="fu">aes</span>(<span class="at">sample =</span> annual_total_snowfall_cm)) <span class="sc">+</span></span>
+<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb138-3"><a href="#cb138-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Distribution Q-Q Plot for Annual Total Snowfall"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_qq_line()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_qq()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-8-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The Q-Q plot conveys that annual total snowfall does not closely follow a normal distribution. I again chose not to remove missing data, so I did not fit the other distributions.</p>
 </section>
 <section id="research-questions" class="level2">
 <h2 class="anchored" data-anchor-id="research-questions">Research Questions</h2>
@@ -208,7 +892,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -240,29 +935,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -270,7 +943,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
