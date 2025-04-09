@@ -29,11 +29,13 @@ theme_set(theme_bw())
 
 ## Introduction
 
-Write the introduction: describe what data you're going to study, why you're interested in it, where you obtained the data, and any other relevant background.
+The data set that will be analyzed in this project is a data set of soil active layer thickness (the maximum depth of thawed soil above permafrost) and climate data for a study site in Utqiagvik, Alaska from 1995-2023. This data set was created last summer during a research internship I completed at the U.S. Naval Research Laboratory. This data is interesting to me because I am generally interested in the cryosphere and how climate change is affecting the Arctic, one of the most dynamic areas of the planet that is warming at rates 2-4 times faster than the rest of Earth.
 
 ### Data set
 
-Describe your data set: what data are you looking at? Where did you get it from (cite publications if relevant), etc. Describe what the data is: what variables are measured, how many observations (rows in a data table) does it contain, etc.
+This data set has 29 observations of 11 variables. The measured variables include year, yearly thawing degree days (cumulative yearly temperature above 0 ℃), yearly freezing degree days (cumulative yearly temperature below  0 ℃), annual mean air temperature (measured in ℃), mean active layer thickness (measured in cm), annual mean snow depth (measured in in.), annual mean snow depth (measured in cm), annual total precipitation (only rain, measured in in,), annual total snowfall (measured in in.), and annual total snowfall (measured in cm). Only the metric measurements of variables will be used.
+
+The active layer thickness measurements come from the Circumpolar Active Layer Monitoring (CALM) Network, an observational network that monitors the response of near-surface permafrost and soil active layer to climate change over multiple decades. The data for my specific study site in Utqiagvik is from CALM Site U1 Barrow, which is a 1 km x 1 km square grid of 121 sampling nodes. Active layer thickness is measured once a year at each of the 121 nodes and the yearly measurement in my data set is the average of these 121 measurements. The data for the climate variables in my data set were obtained from NOAA’s xmACIS, a data-query tool that provides access to climatological summary products from National Weather Service (NWS) field offices. It is directly linked to the Applied Climate Information System (ACIS) and Regional Climate Center (RCC) databases. I used xmACIS to obtain data from the NWS station located at Wiley Post-Will Rogers Memorial Airport in Utqiagvik, the closest station to the study site.
 
 ```{r}
 alt_df <- read.csv("Copy of Utqiagvik Summary Dataset.csv")
@@ -44,13 +46,7 @@ alt_df <- alt_df %>% dplyr::select(!site_code)
 alt_df <- alt_df %>% dplyr::select(!site_name)
 ```
 
-
-
 ## Descriptive Statistics
-
-Put code and text to calculate and present descriptive statistics for your data. This should include histograms and kernel-density plots of the distribution of each variable you will be studying. If you have multivariate data, a pairs plot is helpful for showing the correlations and covariance between different variables.
-
-Describe the probability distribution of the data: is it normal or some other distribution? Histograms and Q-Q plots can be helpful here.
 
 ```{r}
 # Yearly thawing degree days:
