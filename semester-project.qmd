@@ -273,7 +273,9 @@ The Q-Q plot conveys that annual total snowfall does not closely follow a normal
 
 ### Methods
 
-Describe the methods you'll use to analyze your data in preparation for testing hypotheses. Include the analysis code.
+To analyze the correlation between each individual climate variable and active layer thickness, I will be using Spearman correlations because the data is not all normally distributed, which means that a Pearson correlation may not be the best choice since it assumes that both variables are normally distributed. On the other hand, data does not need to be normally distributed for Spearman correlations.
+
+For the linear regressions, I will be using `lm()` to create a linear model with each climate variable and active layer thickness. I will use the models to make predictions and compared the predicted values of active layer thickness to the observed values of active layer thickness. I will also analyze the normality and homogeneity of each model's residuals.
 
 ### Hypothesis Tests
 
