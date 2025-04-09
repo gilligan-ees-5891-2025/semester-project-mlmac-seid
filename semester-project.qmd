@@ -325,6 +325,276 @@ With a rho of -0.28, there is a weak negative relationship between annual total 
 
 #### Linear Regressions:
 
+##### Yearly Thawing Degree Days
+
+```{r}
+tdd_model <- lm(mean_ALT ~ yearly_TDD, data = alt_df)
+
+summary(tdd_model)
+```
+
+TODO: interpret this
+
+```{r}
+alt_df <- alt_df %>% mutate(tdd_pred = predict(tdd_model, newdata = alt_df))
+
+ggplot(alt_df, aes(x = yearly_TDD, y = tdd_pred)) +
+  geom_point(color = "darkblue") +
+  geom_point(aes(y = mean_ALT), color = "darkred") +
+  labs(x = "Yearly Thawing Degree Days", y = "Active Layer Thickness", title = "Predicted vs. Observed ALT Based on yearly_TDD")
+```
+
+TODO: interpret this
+
+```{r}
+tdd_res <- alt_df %>% filter(! is.na(mean_ALT)) %>% 
+  mutate(res = mean_ALT - tdd_pred)
+
+ggplot(tdd_res, aes(sample = res)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Q-Q Plot for TDD Residuals")
+```
+
+TODO: interpret this
+
+```{r}
+ggplot(tdd_res, aes(x = mean_ALT, y = yearly_TDD)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Active Layer Thickness", y = "Yearly Thawing Degree Days", title = "Modeling ALT from Yearly TDD")
+
+ggplot(tdd_res, aes(x = mean_ALT, y = res)) +
+  geom_point() +
+  labs(x = "Active Layer Thickness", y = expression(epsilon), title = "Residuals")
+```
+
+TODO: interpret this
+
+##### Yearly Freezing Degree Days
+
+```{r}
+fdd_model <- lm(mean_ALT ~ yearly_FDD, data = alt_df)
+
+summary(fdd_model)
+```
+
+TODO: interpret this
+
+```{r}
+alt_df <- alt_df %>% mutate(fdd_pred = predict(fdd_model, newdata = alt_df))
+
+ggplot(alt_df, aes(x = yearly_FDD, y = fdd_pred)) +
+  geom_point(color = "darkblue") +
+  geom_point(aes(y = mean_ALT), color = "darkred") +
+  labs(x = "Yearly Freezing Degree Days", y = "Active Layer Thickness", title = "Predicted vs. Observed ALT Based on yearly_FDD")
+```
+
+TODO: interpret this
+
+```{r}
+fdd_res <- alt_df %>% filter(! is.na(mean_ALT)) %>% 
+  mutate(res = mean_ALT - fdd_pred)
+
+ggplot(fdd_res, aes(sample = res)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Q-Q Plot for FDD Residuals")
+```
+
+TODO: interpret this
+
+```{r}
+ggplot(fdd_res, aes(x = mean_ALT, y = yearly_FDD)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Active Layer Thickness", y = "Yearly Freezing Degree Days", title = "Modeling ALT from Yearly FDD")
+
+ggplot(fdd_res, aes(x = mean_ALT, y = res)) +
+  geom_point() +
+  labs(x = "Active Layer Thickness", y = expression(epsilon), title = "Residuals")
+```
+
+TODO: interpret this
+
+##### Annual Mean Air Temperature
+
+```{r}
+air_temp_model <- lm(mean_ALT ~ annual_mean_air_temp, data = alt_df)
+
+summary(air_temp_model)
+```
+
+TODO: interpret this
+
+```{r}
+alt_df <- alt_df %>% mutate(air_temp_pred = predict(air_temp_model, newdata = alt_df))
+
+ggplot(alt_df, aes(x = annual_mean_air_temp, y = air_temp_pred)) +
+  geom_point(color = "darkblue") +
+  geom_point(aes(y = mean_ALT), color = "darkred") +
+  labs(x = "Annual Mean Air Temperature", y = "Active Layer Thickness", title = "Predicted vs. Observed ALT Based on annual_mean_air_temp")
+```
+
+TODO: interpret this
+
+```{r}
+air_temp_res <- alt_df %>% filter(! is.na(mean_ALT)) %>% 
+  mutate(res = mean_ALT - air_temp_pred)
+
+ggplot(air_temp_res, aes(sample = res)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Q-Q Plot for Air Temperature Residuals")
+```
+
+TODO: interpret this
+
+```{r}
+ggplot(air_temp_res, aes(x = mean_ALT, y = annual_mean_air_temp)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Active Layer Thickness", y = "Annual Mean Air Temperature", title = "Modeling ALT from Annual Mean Air Temperature")
+
+ggplot(air_temp_res, aes(x = mean_ALT, y = res)) +
+  geom_point() +
+  labs(x = "Active Layer Thickness", y = expression(epsilon), title = "Residuals")
+```
+
+TODO: interpret this
+
+##### Annual Mean Snow Depth
+
+```{r}
+snow_depth_model <- lm(mean_ALT ~ annual_mean_snow_depth_cm, data = alt_df)
+
+summary(snow_depth_model)
+```
+
+TODO: interpret this
+
+```{r}
+alt_df <- alt_df %>% mutate(snow_depth_pred = predict(snow_depth_model, newdata = alt_df))
+
+ggplot(alt_df, aes(x = annual_mean_snow_depth_cm, y = snow_depth_pred)) +
+  geom_point(color = "darkblue") +
+  geom_point(aes(y = mean_ALT), color = "darkred") +
+  labs(x = "Annual Mean Snow Depth", y = "Active Layer Thickness", title = "Predicted vs. Observed ALT Based on annual_mean_snow_depth_cm")
+```
+
+TODO: interpret this
+
+```{r}
+snow_depth_res <- alt_df %>% filter(! is.na(mean_ALT)) %>% 
+  mutate(res = mean_ALT - snow_depth_pred)
+
+ggplot(snow_depth_res, aes(sample = res)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Q-Q Plot for Snow Depth Residuals")
+```
+
+TODO: interpret this
+
+```{r}
+ggplot(snow_depth_res, aes(x = mean_ALT, y = annual_mean_snow_depth_cm)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Active Layer Thickness", y = "Annual Mean Snow Depth", title = "Modeling ALT from Annual Mean Snow Depth")
+
+ggplot(snow_depth_res, aes(x = mean_ALT, y = res)) +
+  geom_point() +
+  labs(x = "Active Layer Thickness", y = expression(epsilon), title = "Residuals")
+```
+
+TODO: interpret this
+
+##### Annual Total Precipitation
+
+```{r}
+precip_model <- lm(mean_ALT ~ annual_total_precip_cm, data = alt_df)
+
+summary(precip_model)
+```
+
+TODO: interpret this
+
+```{r}
+alt_df <- alt_df %>% mutate(precip_pred = predict(precip_model, newdata = alt_df))
+
+ggplot(alt_df, aes(x = annual_total_precip_cm, y = precip_pred)) +
+  geom_point(color = "darkblue") +
+  geom_point(aes(y = mean_ALT), color = "darkred") +
+  labs(x = "Annual Total Precipitation", y = "Active Layer Thickness", title = "Predicted vs. Observed ALT Based on annual_total_precip_cm")
+```
+
+TODO: interpret this
+
+```{r}
+precip_res <- alt_df %>% filter(! is.na(mean_ALT)) %>% 
+  mutate(res = mean_ALT - precip_pred)
+
+ggplot(precip_res, aes(sample = res)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Q-Q Plot for Precipitation Residuals")
+```
+
+TODO: interpret this
+
+```{r}
+ggplot(precip_res, aes(x = mean_ALT, y = annual_total_precip_cm)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Active Layer Thickness", y = "Annual Total Precipitation", title = "Modeling ALT from Yearly TDD")
+
+ggplot(precip_res, aes(x = mean_ALT, y = res)) +
+  geom_point() +
+  labs(x = "Active Layer Thickness", y = expression(epsilon), title = "Residuals")
+```
+
+TODO: interpret this
+
+##### Annual Total Snowfall
+
+```{r}
+snowfall_model <- lm(mean_ALT ~ annual_total_snowfall_cm, data = alt_df)
+
+summary(snowfall_model)
+```
+
+TODO: interpret this
+
+```{r}
+alt_df <- alt_df %>% mutate(snowfall_pred = predict(snowfall_model, newdata = alt_df))
+
+ggplot(alt_df, aes(x = annual_total_snowfall_cm, y = snowfall_pred)) +
+  geom_point(color = "darkblue") +
+  geom_point(aes(y = mean_ALT), color = "darkred") +
+  labs(x = "Annual Total Snowfall", y = "Active Layer Thickness", title = "Predicted vs. Observed ALT Based on annual_total_snowfall_cm")
+```
+
+TODO: interpret this
+
+```{r}
+snowfall_res <- alt_df %>% filter(! is.na(mean_ALT)) %>% 
+  mutate(res = mean_ALT - snowfall_pred)
+
+ggplot(snowfall_res, aes(sample = res)) +
+  geom_qq_line() + geom_qq() +
+  labs(title = "Q-Q Plot for Snowfall Residuals")
+```
+
+TODO: interpret this
+
+```{r}
+ggplot(snowfall_res, aes(x = mean_ALT, y = annual_total_snowfall_cm)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Active Layer Thickness", y = "Annual Total Snowfall", title = "Modeling ALT from Annual Total Snowfall")
+
+ggplot(snowfall_res, aes(x = mean_ALT, y = res)) +
+  geom_point() +
+  labs(x = "Active Layer Thickness", y = expression(epsilon), title = "Residuals")
+```
+
+TODO: interpret this
+
 ### Results and Discussion
 
 Results from your hypothesis tests and discussion, interpreting your results
@@ -332,6 +602,10 @@ Results from your hypothesis tests and discussion, interpreting your results
 #### Spearman Correlations
 
 TODO: which ones are positive and negative, which ones are significant and not, surprising results
+
+#### Linear Regression Models
+
+TODO: when linear regression worked well and when it didn't, most promising variable for linear regression
 
 ## Conclusions
 

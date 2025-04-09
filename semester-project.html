@@ -955,6 +955,588 @@ sample estimates:
 </section>
 <section id="linear-regressions" class="level4">
 <h4 class="anchored" data-anchor-id="linear-regressions">Linear Regressions:</h4>
+<section id="yearly-thawing-degree-days" class="level5">
+<h5 class="anchored" data-anchor-id="yearly-thawing-degree-days">Yearly Thawing Degree Days</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a>tdd_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mean_ALT <span class="sc">~</span> yearly_TDD, <span class="at">data =</span> alt_df)</span>
+<span id="cb154-2"><a href="#cb154-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb154-3"><a href="#cb154-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tdd_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = mean_ALT ~ yearly_TDD, data = alt_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.9939 -2.6192 -0.0132  2.9143  9.1801 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 23.793690   2.851539   8.344 5.92e-09 ***
+yearly_TDD   0.028716   0.006073   4.728 6.32e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.614 on 27 degrees of freedom
+Multiple R-squared:  0.4529,    Adjusted R-squared:  0.4327 
+F-statistic: 22.36 on 1 and 27 DF,  p-value: 6.324e-05</code></pre>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">tdd_pred =</span> <span class="fu">predict</span>(tdd_model, <span class="at">newdata =</span> alt_df))</span>
+<span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb156-3"><a href="#cb156-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(alt_df, <span class="fu">aes</span>(<span class="at">x =</span> yearly_TDD, <span class="at">y =</span> tdd_pred)) <span class="sc">+</span></span>
+<span id="cb156-4"><a href="#cb156-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb156-5"><a href="#cb156-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_ALT), <span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb156-6"><a href="#cb156-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Yearly Thawing Degree Days"</span>, <span class="at">y =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">title =</span> <span class="st">"Predicted vs. Observed ALT Based on yearly_TDD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb157"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb157-1"><a href="#cb157-1" aria-hidden="true" tabindex="-1"></a>tdd_res <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span> <span class="fu">is.na</span>(mean_ALT)) <span class="sc">%&gt;%</span> </span>
+<span id="cb157-2"><a href="#cb157-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">res =</span> mean_ALT <span class="sc">-</span> tdd_pred)</span>
+<span id="cb157-3"><a href="#cb157-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-4"><a href="#cb157-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tdd_res, <span class="fu">aes</span>(<span class="at">sample =</span> res)) <span class="sc">+</span></span>
+<span id="cb157-5"><a href="#cb157-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb157-6"><a href="#cb157-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Q-Q Plot for TDD Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb158"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tdd_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> yearly_TDD)) <span class="sc">+</span></span>
+<span id="cb158-2"><a href="#cb158-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb158-3"><a href="#cb158-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb158-4"><a href="#cb158-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="st">"Yearly Thawing Degree Days"</span>, <span class="at">title =</span> <span class="st">"Modeling ALT from Yearly TDD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tdd_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> res)) <span class="sc">+</span></span>
+<span id="cb160-2"><a href="#cb160-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb160-3"><a href="#cb160-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="fu">expression</span>(epsilon), <span class="at">title =</span> <span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+</section>
+<section id="yearly-freezing-degree-days" class="level5">
+<h5 class="anchored" data-anchor-id="yearly-freezing-degree-days">Yearly Freezing Degree Days</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb161"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb161-1"><a href="#cb161-1" aria-hidden="true" tabindex="-1"></a>fdd_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mean_ALT <span class="sc">~</span> yearly_FDD, <span class="at">data =</span> alt_df)</span>
+<span id="cb161-2"><a href="#cb161-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb161-3"><a href="#cb161-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fdd_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = mean_ALT ~ yearly_FDD, data = alt_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.7490 -3.2103 -0.5923  3.6771  8.0045 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 55.380227   7.548018   7.337 6.83e-08 ***
+yearly_FDD   0.004599   0.001867   2.463   0.0204 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.415 on 27 degrees of freedom
+Multiple R-squared:  0.1835,    Adjusted R-squared:  0.1532 
+F-statistic: 6.068 on 1 and 27 DF,  p-value: 0.02043</code></pre>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb163"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">fdd_pred =</span> <span class="fu">predict</span>(fdd_model, <span class="at">newdata =</span> alt_df))</span>
+<span id="cb163-2"><a href="#cb163-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb163-3"><a href="#cb163-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(alt_df, <span class="fu">aes</span>(<span class="at">x =</span> yearly_FDD, <span class="at">y =</span> fdd_pred)) <span class="sc">+</span></span>
+<span id="cb163-4"><a href="#cb163-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb163-5"><a href="#cb163-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_ALT), <span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb163-6"><a href="#cb163-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Yearly Freezing Degree Days"</span>, <span class="at">y =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">title =</span> <span class="st">"Predicted vs. Observed ALT Based on yearly_FDD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb164"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a>fdd_res <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span> <span class="fu">is.na</span>(mean_ALT)) <span class="sc">%&gt;%</span> </span>
+<span id="cb164-2"><a href="#cb164-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">res =</span> mean_ALT <span class="sc">-</span> fdd_pred)</span>
+<span id="cb164-3"><a href="#cb164-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb164-4"><a href="#cb164-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fdd_res, <span class="fu">aes</span>(<span class="at">sample =</span> res)) <span class="sc">+</span></span>
+<span id="cb164-5"><a href="#cb164-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb164-6"><a href="#cb164-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Q-Q Plot for FDD Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb165"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb165-1"><a href="#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fdd_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> yearly_FDD)) <span class="sc">+</span></span>
+<span id="cb165-2"><a href="#cb165-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb165-3"><a href="#cb165-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb165-4"><a href="#cb165-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="st">"Yearly Freezing Degree Days"</span>, <span class="at">title =</span> <span class="st">"Modeling ALT from Yearly FDD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb167"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a href="#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fdd_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> res)) <span class="sc">+</span></span>
+<span id="cb167-2"><a href="#cb167-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb167-3"><a href="#cb167-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="fu">expression</span>(epsilon), <span class="at">title =</span> <span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+</section>
+<section id="annual-mean-air-temperature" class="level5">
+<h5 class="anchored" data-anchor-id="annual-mean-air-temperature">Annual Mean Air Temperature</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb168"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb168-1"><a href="#cb168-1" aria-hidden="true" tabindex="-1"></a>air_temp_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mean_ALT <span class="sc">~</span> annual_mean_air_temp, <span class="at">data =</span> alt_df)</span>
+<span id="cb168-2"><a href="#cb168-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb168-3"><a href="#cb168-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(air_temp_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = mean_ALT ~ annual_mean_air_temp, data = alt_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.8577 -2.5370 -0.0129  3.2958  8.0875 
+
+Coefficients:
+                     Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)            54.866      5.574   9.844 1.99e-10 ***
+annual_mean_air_temp    1.842      0.566   3.255  0.00305 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.141 on 27 degrees of freedom
+Multiple R-squared:  0.2818,    Adjusted R-squared:  0.2552 
+F-statistic:  10.6 on 1 and 27 DF,  p-value: 0.003048</code></pre>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb170"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb170-1"><a href="#cb170-1" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">air_temp_pred =</span> <span class="fu">predict</span>(air_temp_model, <span class="at">newdata =</span> alt_df))</span>
+<span id="cb170-2"><a href="#cb170-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-3"><a href="#cb170-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(alt_df, <span class="fu">aes</span>(<span class="at">x =</span> annual_mean_air_temp, <span class="at">y =</span> air_temp_pred)) <span class="sc">+</span></span>
+<span id="cb170-4"><a href="#cb170-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb170-5"><a href="#cb170-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_ALT), <span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb170-6"><a href="#cb170-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Annual Mean Air Temperature"</span>, <span class="at">y =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">title =</span> <span class="st">"Predicted vs. Observed ALT Based on annual_mean_air_temp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb171"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a href="#cb171-1" aria-hidden="true" tabindex="-1"></a>air_temp_res <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span> <span class="fu">is.na</span>(mean_ALT)) <span class="sc">%&gt;%</span> </span>
+<span id="cb171-2"><a href="#cb171-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">res =</span> mean_ALT <span class="sc">-</span> air_temp_pred)</span>
+<span id="cb171-3"><a href="#cb171-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-4"><a href="#cb171-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(air_temp_res, <span class="fu">aes</span>(<span class="at">sample =</span> res)) <span class="sc">+</span></span>
+<span id="cb171-5"><a href="#cb171-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb171-6"><a href="#cb171-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Q-Q Plot for Air Temperature Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb172"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb172-1"><a href="#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(air_temp_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> annual_mean_air_temp)) <span class="sc">+</span></span>
+<span id="cb172-2"><a href="#cb172-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb172-3"><a href="#cb172-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb172-4"><a href="#cb172-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="st">"Annual Mean Air Temperature"</span>, <span class="at">title =</span> <span class="st">"Modeling ALT from Annual Mean Air Temperature"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb174"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb174-1"><a href="#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(air_temp_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> res)) <span class="sc">+</span></span>
+<span id="cb174-2"><a href="#cb174-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb174-3"><a href="#cb174-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="fu">expression</span>(epsilon), <span class="at">title =</span> <span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-26-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+</section>
+<section id="annual-mean-snow-depth" class="level5">
+<h5 class="anchored" data-anchor-id="annual-mean-snow-depth">Annual Mean Snow Depth</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb175"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb175-1"><a href="#cb175-1" aria-hidden="true" tabindex="-1"></a>snow_depth_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mean_ALT <span class="sc">~</span> annual_mean_snow_depth_cm, <span class="at">data =</span> alt_df)</span>
+<span id="cb175-2"><a href="#cb175-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-3"><a href="#cb175-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snow_depth_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = mean_ALT ~ annual_mean_snow_depth_cm, data = alt_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.2063 -2.9733  0.1358  1.6886  9.1267 
+
+Coefficients:
+                          Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                43.1277     2.6406  16.332 1.68e-14 ***
+annual_mean_snow_depth_cm  -0.4518     0.1861  -2.428    0.023 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.262 on 24 degrees of freedom
+  (3 observations deleted due to missingness)
+Multiple R-squared:  0.1972,    Adjusted R-squared:  0.1638 
+F-statistic: 5.896 on 1 and 24 DF,  p-value: 0.02304</code></pre>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb177"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb177-1"><a href="#cb177-1" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">snow_depth_pred =</span> <span class="fu">predict</span>(snow_depth_model, <span class="at">newdata =</span> alt_df))</span>
+<span id="cb177-2"><a href="#cb177-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-3"><a href="#cb177-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(alt_df, <span class="fu">aes</span>(<span class="at">x =</span> annual_mean_snow_depth_cm, <span class="at">y =</span> snow_depth_pred)) <span class="sc">+</span></span>
+<span id="cb177-4"><a href="#cb177-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb177-5"><a href="#cb177-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_ALT), <span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb177-6"><a href="#cb177-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Annual Mean Snow Depth"</span>, <span class="at">y =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">title =</span> <span class="st">"Predicted vs. Observed ALT Based on annual_mean_snow_depth_cm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing missing values or values outside the scale range
+(`geom_point()`).
+Removed 3 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb179"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb179-1"><a href="#cb179-1" aria-hidden="true" tabindex="-1"></a>snow_depth_res <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span> <span class="fu">is.na</span>(mean_ALT)) <span class="sc">%&gt;%</span> </span>
+<span id="cb179-2"><a href="#cb179-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">res =</span> mean_ALT <span class="sc">-</span> snow_depth_pred)</span>
+<span id="cb179-3"><a href="#cb179-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb179-4"><a href="#cb179-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(snow_depth_res, <span class="fu">aes</span>(<span class="at">sample =</span> res)) <span class="sc">+</span></span>
+<span id="cb179-5"><a href="#cb179-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb179-6"><a href="#cb179-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Q-Q Plot for Snow Depth Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_qq_line()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_qq()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb182"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb182-1"><a href="#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(snow_depth_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> annual_mean_snow_depth_cm)) <span class="sc">+</span></span>
+<span id="cb182-2"><a href="#cb182-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb182-3"><a href="#cb182-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb182-4"><a href="#cb182-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="st">"Annual Mean Snow Depth"</span>, <span class="at">title =</span> <span class="st">"Modeling ALT from Annual Mean Snow Depth"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_smooth()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb186"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb186-1"><a href="#cb186-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(snow_depth_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> res)) <span class="sc">+</span></span>
+<span id="cb186-2"><a href="#cb186-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb186-3"><a href="#cb186-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="fu">expression</span>(epsilon), <span class="at">title =</span> <span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-30-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+</section>
+<section id="annual-total-precipitation" class="level5">
+<h5 class="anchored" data-anchor-id="annual-total-precipitation">Annual Total Precipitation</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb188"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb188-1"><a href="#cb188-1" aria-hidden="true" tabindex="-1"></a>precip_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mean_ALT <span class="sc">~</span> annual_total_precip_cm, <span class="at">data =</span> alt_df)</span>
+<span id="cb188-2"><a href="#cb188-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb188-3"><a href="#cb188-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(precip_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = mean_ALT ~ annual_total_precip_cm, data = alt_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.2734 -2.9180  0.2117  3.3108  7.8960 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)             29.2736     2.7671  10.579 4.19e-11 ***
+annual_total_precip_cm   0.5164     0.1796   2.876  0.00777 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.275 on 27 degrees of freedom
+Multiple R-squared:  0.2345,    Adjusted R-squared:  0.2062 
+F-statistic: 8.272 on 1 and 27 DF,  p-value: 0.007767</code></pre>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb190"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb190-1"><a href="#cb190-1" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">precip_pred =</span> <span class="fu">predict</span>(precip_model, <span class="at">newdata =</span> alt_df))</span>
+<span id="cb190-2"><a href="#cb190-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb190-3"><a href="#cb190-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(alt_df, <span class="fu">aes</span>(<span class="at">x =</span> annual_total_precip_cm, <span class="at">y =</span> precip_pred)) <span class="sc">+</span></span>
+<span id="cb190-4"><a href="#cb190-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb190-5"><a href="#cb190-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_ALT), <span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb190-6"><a href="#cb190-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Annual Total Precipitation"</span>, <span class="at">y =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">title =</span> <span class="st">"Predicted vs. Observed ALT Based on annual_total_precip_cm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb191"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb191-1"><a href="#cb191-1" aria-hidden="true" tabindex="-1"></a>precip_res <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span> <span class="fu">is.na</span>(mean_ALT)) <span class="sc">%&gt;%</span> </span>
+<span id="cb191-2"><a href="#cb191-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">res =</span> mean_ALT <span class="sc">-</span> precip_pred)</span>
+<span id="cb191-3"><a href="#cb191-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb191-4"><a href="#cb191-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(precip_res, <span class="fu">aes</span>(<span class="at">sample =</span> res)) <span class="sc">+</span></span>
+<span id="cb191-5"><a href="#cb191-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb191-6"><a href="#cb191-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Q-Q Plot for Precipitation Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb192"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb192-1"><a href="#cb192-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(precip_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> annual_total_precip_cm)) <span class="sc">+</span></span>
+<span id="cb192-2"><a href="#cb192-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb192-3"><a href="#cb192-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb192-4"><a href="#cb192-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="st">"Annual Total Precipitation"</span>, <span class="at">title =</span> <span class="st">"Modeling ALT from Yearly TDD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb194"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb194-1"><a href="#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(precip_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> res)) <span class="sc">+</span></span>
+<span id="cb194-2"><a href="#cb194-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb194-3"><a href="#cb194-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="fu">expression</span>(epsilon), <span class="at">title =</span> <span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-34-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+</section>
+<section id="annual-total-snowfall" class="level5">
+<h5 class="anchored" data-anchor-id="annual-total-snowfall">Annual Total Snowfall</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb195"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb195-1"><a href="#cb195-1" aria-hidden="true" tabindex="-1"></a>snowfall_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mean_ALT <span class="sc">~</span> annual_total_snowfall_cm, <span class="at">data =</span> alt_df)</span>
+<span id="cb195-2"><a href="#cb195-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb195-3"><a href="#cb195-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snowfall_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = mean_ALT ~ annual_total_snowfall_cm, data = alt_df)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-7.077 -3.772 -0.586  2.781  8.645 
+
+Coefficients:
+                         Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)              41.13864    2.70870  15.188 8.28e-14 ***
+annual_total_snowfall_cm -0.03566    0.02230  -1.599    0.123    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.522 on 24 degrees of freedom
+  (3 observations deleted due to missingness)
+Multiple R-squared:  0.09629,   Adjusted R-squared:  0.05864 
+F-statistic: 2.557 on 1 and 24 DF,  p-value: 0.1229</code></pre>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb197"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb197-1"><a href="#cb197-1" aria-hidden="true" tabindex="-1"></a>alt_df <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">snowfall_pred =</span> <span class="fu">predict</span>(snowfall_model, <span class="at">newdata =</span> alt_df))</span>
+<span id="cb197-2"><a href="#cb197-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb197-3"><a href="#cb197-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(alt_df, <span class="fu">aes</span>(<span class="at">x =</span> annual_total_snowfall_cm, <span class="at">y =</span> snowfall_pred)) <span class="sc">+</span></span>
+<span id="cb197-4"><a href="#cb197-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb197-5"><a href="#cb197-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_ALT), <span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb197-6"><a href="#cb197-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Annual Total Snowfall"</span>, <span class="at">y =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">title =</span> <span class="st">"Predicted vs. Observed ALT Based on annual_total_snowfall_cm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing missing values or values outside the scale range
+(`geom_point()`).
+Removed 3 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb199"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb199-1"><a href="#cb199-1" aria-hidden="true" tabindex="-1"></a>snowfall_res <span class="ot">&lt;-</span> alt_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span> <span class="fu">is.na</span>(mean_ALT)) <span class="sc">%&gt;%</span> </span>
+<span id="cb199-2"><a href="#cb199-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">res =</span> mean_ALT <span class="sc">-</span> snowfall_pred)</span>
+<span id="cb199-3"><a href="#cb199-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb199-4"><a href="#cb199-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(snowfall_res, <span class="fu">aes</span>(<span class="at">sample =</span> res)) <span class="sc">+</span></span>
+<span id="cb199-5"><a href="#cb199-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span> <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb199-6"><a href="#cb199-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Q-Q Plot for Snowfall Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_qq_line()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_qq()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb202"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb202-1"><a href="#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(snowfall_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> annual_total_snowfall_cm)) <span class="sc">+</span></span>
+<span id="cb202-2"><a href="#cb202-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb202-3"><a href="#cb202-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb202-4"><a href="#cb202-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="st">"Annual Total Snowfall"</span>, <span class="at">title =</span> <span class="st">"Modeling ALT from Annual Total Snowfall"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
+(`stat_smooth()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb206"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb206-1"><a href="#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(snowfall_res, <span class="fu">aes</span>(<span class="at">x =</span> mean_ALT, <span class="at">y =</span> res)) <span class="sc">+</span></span>
+<span id="cb206-2"><a href="#cb206-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb206-3"><a href="#cb206-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Active Layer Thickness"</span>, <span class="at">y =</span> <span class="fu">expression</span>(epsilon), <span class="at">title =</span> <span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="semester-project_files/figure-html/unnamed-chunk-38-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>TODO: interpret this</p>
+</section>
 </section>
 </section>
 <section id="results-and-discussion" class="level3">
@@ -963,6 +1545,10 @@ sample estimates:
 <section id="spearman-correlations-1" class="level4">
 <h4 class="anchored" data-anchor-id="spearman-correlations-1">Spearman Correlations</h4>
 <p>TODO: which ones are positive and negative, which ones are significant and not, surprising results</p>
+</section>
+<section id="linear-regression-models" class="level4">
+<h4 class="anchored" data-anchor-id="linear-regression-models">Linear Regression Models</h4>
+<p>TODO: when linear regression worked well and when it didn’t, most promising variable for linear regression</p>
 </section>
 </section>
 </section>
