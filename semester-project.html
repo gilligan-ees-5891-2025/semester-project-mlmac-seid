@@ -851,7 +851,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="hypothesis-tests" class="level3">
 <h3 class="anchored" data-anchor-id="hypothesis-tests">Hypothesis Tests</h3>
 <section id="spearman-correlations" class="level4">
-<h4 class="anchored" data-anchor-id="spearman-correlations">Spearman Correlations</h4>
+<h4 class="anchored" data-anchor-id="spearman-correlations">Spearman Correlations:</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Yearly thawing degree days:</span></span>
 <span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(alt_df<span class="sc">$</span>yearly_TDD, alt_df<span class="sc">$</span>mean_ALT, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -885,13 +885,85 @@ sample estimates:
 </div>
 <p>Since rho is 0.35, yearly freezing degree days has a moderate positive relationship with active layer thickness. The p-value is greater than 0.05, though, so this relationship is not statistically significant.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annual mean air temperature:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annual mean air temperature:</span></span>
+<span id="cb145-2"><a href="#cb145-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(alt_df<span class="sc">$</span>annual_mean_air_temp, alt_df<span class="sc">$</span>mean_ALT, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  alt_df$annual_mean_air_temp and alt_df$mean_ALT
+S = 2212, p-value = 0.01389
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+      rho 
+0.4551724 </code></pre>
 </div>
+</div>
+<p>With a rho of 0.46, annual mean air temperature has a strong positive relationship with active layer thickness. The p-value is less than 0.05, indicating that this relationship is statistically significant.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annual mean snow depth:</span></span>
+<span id="cb147-2"><a href="#cb147-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(alt_df<span class="sc">$</span>annual_mean_snow_depth_cm, alt_df<span class="sc">$</span>mean_ALT, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in cor.test.default(alt_df$annual_mean_snow_depth_cm, alt_df$mean_ALT,
+: Cannot compute exact p-value with ties</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  alt_df$annual_mean_snow_depth_cm and alt_df$mean_ALT
+S = 4143.3, p-value = 0.03429
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+       rho 
+-0.4165104 </code></pre>
+</div>
+</div>
+<p>The rho is -0.417, so the relationship between annual mean snow depth and active layer thickness is strong and negative. The p-value is less than 0.05, so this relationship is statistically significant.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annual total precipitation:</span></span>
+<span id="cb150-2"><a href="#cb150-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(alt_df<span class="sc">$</span>annual_total_precip_cm, alt_df<span class="sc">$</span>mean_ALT, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  alt_df$annual_total_precip_cm and alt_df$mean_ALT
+S = 2374, p-value = 0.02595
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+      rho 
+0.4152709 </code></pre>
+</div>
+</div>
+<p>The rho of 0.42 indicates a strong positive relationship between annual total precipitation and active layer thickness. The p-value is less than 0.05, which indicates that this relationship is statistically significant.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annual total snowfall:</span></span>
+<span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(alt_df<span class="sc">$</span>annual_total_snowfall_cm, alt_df<span class="sc">$</span>mean_ALT, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  alt_df$annual_total_snowfall_cm and alt_df$mean_ALT
+S = 3740, p-value = 0.1677
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+       rho 
+-0.2786325 </code></pre>
+</div>
+</div>
+<p>With a rho of -0.28, there is a weak negative relationship between annual total snowfall and active layer thickness. The p-value is greater than 0.05, so this relationship is not statistically significant.</p>
+</section>
+<section id="linear-regressions" class="level4">
+<h4 class="anchored" data-anchor-id="linear-regressions">Linear Regressions:</h4>
 </section>
 </section>
 <section id="results-and-discussion" class="level3">
 <h3 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h3>
 <p>Results from your hypothesis tests and discussion, interpreting your results</p>
+<section id="spearman-correlations-1" class="level4">
+<h4 class="anchored" data-anchor-id="spearman-correlations-1">Spearman Correlations</h4>
+<p>TODO: which ones are positive and negative, which ones are significant and not, surprising results</p>
+</section>
 </section>
 </section>
 <section id="conclusions" class="level2">

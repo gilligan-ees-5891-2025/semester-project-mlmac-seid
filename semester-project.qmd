@@ -279,7 +279,7 @@ For the linear regressions, I will be using `lm()` to create a linear model with
 
 ### Hypothesis Tests
 
-#### Spearman Correlations
+#### Spearman Correlations:
 
 ```{r}
 # Yearly thawing degree days:
@@ -297,13 +297,41 @@ Since rho is 0.35, yearly freezing degree days has a moderate positive relations
 
 ```{r}
 # Annual mean air temperature:
-
+cor.test(alt_df$annual_mean_air_temp, alt_df$mean_ALT, method = "spearman")
 ```
 
+With a rho of 0.46, annual mean air temperature has a strong positive relationship with active layer thickness. The p-value is less than 0.05, indicating that this relationship is statistically significant.
+
+```{r}
+# Annual mean snow depth:
+cor.test(alt_df$annual_mean_snow_depth_cm, alt_df$mean_ALT, method = "spearman")
+```
+
+The rho is -0.417, so the relationship between annual mean snow depth and active layer thickness is strong and negative. The p-value is less than 0.05, so this relationship is statistically significant.
+
+```{r}
+# Annual total precipitation:
+cor.test(alt_df$annual_total_precip_cm, alt_df$mean_ALT, method = "spearman")
+```
+
+The rho of 0.42 indicates a strong positive relationship between annual total precipitation and active layer thickness. The p-value is less than 0.05, which indicates that this relationship is statistically significant.
+
+```{r}
+# Annual total snowfall:
+cor.test(alt_df$annual_total_snowfall_cm, alt_df$mean_ALT, method = "spearman")
+```
+
+With a rho of -0.28, there is a weak negative relationship between annual total snowfall and active layer thickness. The p-value is greater than 0.05, so this relationship is not statistically significant.
+
+#### Linear Regressions:
 
 ### Results and Discussion
 
 Results from your hypothesis tests and discussion, interpreting your results
+
+#### Spearman Correlations
+
+TODO: which ones are positive and negative, which ones are significant and not, surprising results
 
 ## Conclusions
 
