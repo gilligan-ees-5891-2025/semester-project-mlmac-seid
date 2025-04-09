@@ -850,7 +850,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="hypothesis-tests" class="level3">
 <h3 class="anchored" data-anchor-id="hypothesis-tests">Hypothesis Tests</h3>
-<p>Details about the hypothesis tests, including code</p>
+<section id="spearman-correlations" class="level4">
+<h4 class="anchored" data-anchor-id="spearman-correlations">Spearman Correlations</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Yearly thawing degree days:</span></span>
+<span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(alt_df<span class="sc">$</span>yearly_TDD, alt_df<span class="sc">$</span>mean_ALT, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  alt_df$yearly_TDD and alt_df$mean_ALT
+S = 1426, p-value = 0.0001985
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+      rho 
+0.6487685 </code></pre>
+</div>
+</div>
+<p>Since rho is 0.65, yearly thawing degree days has a strong positive relationship with active layer thickness. Since the p-value is less than 0.05, this relationship is statistically significant.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Yearly freezing degree days:</span></span>
+<span id="cb143-2"><a href="#cb143-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(alt_df<span class="sc">$</span>yearly_FDD, alt_df<span class="sc">$</span>mean_ALT, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  alt_df$yearly_FDD and alt_df$mean_ALT
+S = 2654, p-value = 0.06634
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+      rho 
+0.3463054 </code></pre>
+</div>
+</div>
+<p>Since rho is 0.35, yearly freezing degree days has a moderate positive relationship with active layer thickness. The p-value is greater than 0.05, though, so this relationship is not statistically significant.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annual mean air temperature:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 </section>
 <section id="results-and-discussion" class="level3">
 <h3 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h3>

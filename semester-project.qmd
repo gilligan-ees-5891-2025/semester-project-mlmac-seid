@@ -279,7 +279,27 @@ For the linear regressions, I will be using `lm()` to create a linear model with
 
 ### Hypothesis Tests
 
-Details about the hypothesis tests, including code
+#### Spearman Correlations
+
+```{r}
+# Yearly thawing degree days:
+cor.test(alt_df$yearly_TDD, alt_df$mean_ALT, method = "spearman")
+```
+
+Since rho is 0.65, yearly thawing degree days has a strong positive relationship with active layer thickness. Since the p-value is less than 0.05, this relationship is statistically significant.
+
+```{r}
+# Yearly freezing degree days:
+cor.test(alt_df$yearly_FDD, alt_df$mean_ALT, method = "spearman")
+```
+
+Since rho is 0.35, yearly freezing degree days has a moderate positive relationship with active layer thickness. The p-value is greater than 0.05, though, so this relationship is not statistically significant.
+
+```{r}
+# Annual mean air temperature:
+
+```
+
 
 ### Results and Discussion
 
