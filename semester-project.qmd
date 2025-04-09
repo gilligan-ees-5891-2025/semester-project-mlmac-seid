@@ -251,19 +251,25 @@ The Q-Q plot conveys that annual total snowfall does not closely follow a normal
 
 ## Research Questions
 
-This is a place to describe the research questions you want to ask about your data.
+1) How are individual climate variables correlated with active layer thickness?
 
-It's helpful to use tables and/or graphs to illustrate what you're thinking about and what questions you want to ask.
+2) Which climate variable is the most strongly correlated with active layer thickness?
+
+3) How well does linear regression work to predict active layer thickness, using each individual climate variable?
+
+4) Which climate variable is the best to use in a linear regression model to predict active layer thickness?
 
 ## Hypotheses and Tests
 
-State hypotheses about your data and describe how you will use tests to test the hypotheses
-
-Put code to implement the analysis and hypothesis tests, and include interpretations of thee
-
 ### Hypotheses
 
-State your hypothesis or hypotheses
+1) Yearly thawing degree days, annual mean air temperature, and annual total precipitation will be positively correlated with active layer thickness. Yearly freezing degree days, annual mean snow depth, and annual total snowfall will be negatively correlated with active layer thickness.
+
+2) Annual mean air temperature will have the strongest correlation with active layer thickness.
+
+3) Linear regression will work well for yearly thawing degree days, annual mean air temperature, yearly freezing degree days, and annual total snowfall because I hypothesize that these variables will have a linear relationship with active layer thickness.
+
+4) Annual mean air temperature will be the best variable for linear regression because I hypothesize that the relationship between annual mean air temperature and active layer thickness will be the most linear out of the climate variables.
 
 ### Methods
 
